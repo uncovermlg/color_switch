@@ -3,16 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <title>Color Switch</title>
-    <link rel="stylesheet" type="text/css" href="stylesheet.css?version=21">
+    <link rel="stylesheet" type="text/css" href="stylesheet.css?version=31">
 
 </head>
 <body style="background-color: grey">
 
-<canvas id="canvas" height="700" width="400" style= "border:1px solid black" ></canvas>
+<canvas id="canvas" height="700" width="400" style= "border:1px solid yellow" ></canvas>
 
+<audio id="music">
+    <source src="music.mp3" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>
+
+<p id="intro">CLICK anywhere on the CANVAS to start</p>
 <p id="score"> Your Score: 0</p>
 <p id="highscore"> High Score: 0</p>
-<p id="intro">CLICK anywhere on the CANVAS to start</p>
+<p id="level"> </p>
+<p id="copyright"> Copyright @2020 Gokulan</p>
+
 <script type="text/javascript" src="script2.js"></script>
+
 </body>
 </html>

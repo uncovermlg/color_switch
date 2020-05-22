@@ -13,6 +13,13 @@ var IDjump=null;
 var IDmove=null;
 var IDspin=null;
 var IDpoint=null;
+var jumpspeed = 0.5;
+var spinspeed = 12;
+var movespeed = 10;
+var pointspeed = 100;
+
+var level = 1;
+document.getElementById("level").innerHTML= "LEVEL: "+level;
 
 //variables for the obsatcles:
 var paint=["red","blue","yellow","green"];
@@ -38,7 +45,9 @@ var bcolor= paint[Math.floor(Math.random()*4)]; //ball colors
 var base=by;
 var ballrad=15;
 
-var status = "running" //for pausing the game
+var music = document.getElementById("music");
+
+
 
 //to initialize the variables again when the game ends:
 function initialize(){
@@ -47,12 +56,20 @@ window.clearInterval(IDmove);
 window.clearInterval(IDspin);
 window.clearInterval(IDpoint);
 
+
+
 by=base=350;
 change=0;
 b=obrad;
 ly=350+obrad;
 score=0;
+level=1;
+
+spinspeed = 12;
+movespeed = 12;
+
 document.getElementById("score").innerHTML= "Your Score: " + score;
+document.getElementById("level").innerHTML= "Level: " + level;
 intro.textContent = "CLICK anywhere on the CANVAS to start";
 bcolor= paint[Math.floor(Math.random()*4)];
 }
@@ -70,6 +87,7 @@ draw();
 
 //setting up click time functions:
 canvas.addEventListener("click",function() {
+music.play();
 base=by;
 if(direction == -1) direction *= -1;
 window.clearInterval(IDjump);
@@ -77,10 +95,10 @@ window.clearInterval(IDmove);
 window.clearInterval(IDspin);
 window.clearInterval(IDpoint);
 
-IDjump = window.setInterval(jump, 0.5);
-IDspin = window.setInterval(spin,10);
-IDmove = window.setInterval(move,12);
-IDpoint = window.setInterval(points,100);
+IDjump = window.setInterval(jump, jumpspeed);
+IDspin = window.setInterval(spin,spinspeed);
+IDmove = window.setInterval(move,movespeed);
+IDpoint = window.setInterval(points,pointspeed);
 
 intro.textContent = "Press SPACE to pause";
 });
@@ -133,10 +151,14 @@ ctx.stroke();
 function jump(){
 ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+if (direction == -1)
+by -= direction * (1 + level/10);
+else
 by -= direction;
 
+console.log("hey");
 if (by == base-80) direction *= -1;
-if (by == 700+ballrad) gameover();
+if (Math.floor(by) == 700+ballrad) gameover();
 
 //condition to check if the ball touches the obstacle:
 if (Math.abs(by-b) <= obrad + ballrad && Math.abs(by-b) >= obrad -20 - ballrad ){
@@ -145,7 +167,7 @@ if (n) gameover();
 }
 
 // condition to check if the ball crosses the line:
-if (by == ly) {
+if (Math.floor(by) == ly) {
 paint=shuffle(paint);
 bcolor= paint[Math.floor(Math.random()*4)];
 }
@@ -201,10 +223,12 @@ else return 1;
 
 //function to be called when the game ends
 function gameover(){
+music.pause();
 alert("Your score: " + score);
 if (score>highscore){
 localStorage.setItem("highscore",score);
 }
+
 initialize();
 }
 
@@ -216,6 +240,13 @@ if (score>highscore)
 {
 document.getElementById("highscore").innerHTML= "High Score: " + score;
 }
+if (!(score%100)){
+movespeed--;
+spinspeed--;
+level++;
+document.getElementById("level").innerHTML= "LEVEL: "+ level;
+}
+
 }
 
 document.addEventListener('keydown', logKey);
